@@ -170,34 +170,31 @@
 			$gardena = new gardena($username, $password);
     			$mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
 
-        	{
-            	$switch = $action;
-            	switch ($switch)
-            	{
-					// Parken ----------------------------------------------------------
-					case 1:
-						$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_PARK_UNTIL_FURTHER_NOTICE);
-						break;
-					case 2:
-						$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_PARK_UNTIL_NEXT_TIMER);
-						break;
-					// Mähen -----------------------------------------------------------
-					case 3:
-						$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_START_RESUME_SCHEDULE);
-						break;
-					case 4:
-						$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_START_24HOURS);
-						break;
-					case 5:
-						$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_START_3DAYS);
-						break;
-					case 6:
-						$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_START_2HOURS);
-						break;			    
-            	}
-        
-			}		
-		}
+			switch ($action)
+			{
+						// Parken ----------------------------------------------------------
+						case 1:
+							$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_PARK_UNTIL_FURTHER_NOTICE);
+							break;
+						case 2:
+							$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_PARK_UNTIL_NEXT_TIMER);
+							break;
+						// Mähen -----------------------------------------------------------
+						case 3:
+							$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_START_RESUME_SCHEDULE);
+							break;
+						case 4:
+							$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_START_24HOURS);
+							break;
+						case 5:
+							$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_START_3DAYS);
+							break;
+						case 6:
+							$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_START_2HOURS);
+							break;			    
+			}
+		}		
+		
 		
     }
 ?>
