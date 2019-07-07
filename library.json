@@ -1,10 +1,10 @@
 {
 	"id": "{126e249f-273c-4e95-9036-2c68bd23cb82}",
-	"author": "Ultimate Software",
-	"name": "Gardena Smart",
-	"url": "www.ultimatesoftware.de",
+	"author": "Jochen Kress",
+	"name": "IPSGardenaSmart",
+	"url": "",
 	"compatibility": {
-		"version": "4.2"
+		"version": "5.1"
 	},
 	"version": "1.0",
 	"build": 0,
