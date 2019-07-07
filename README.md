@@ -1,1 +1,1 @@
-# IPSGardena
+# IPSGardenaSmart
