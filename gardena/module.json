@@ -3,12 +3,7 @@
     "name": "gardena",
     "type": 3,
     "vendor": "gardena",
-    "aliases":
-    [
-        "Gardena",
-        "Gardena Smart",
-        "Gardena API"
-    ],  
+    "aliases": ["Gardena API"],  
     "parentRequirements": [],
     "childRequirements": [],
     "implemented": [],
