@@ -268,7 +268,7 @@
             	$switch = $action;
             	switch ($switch)
             	{
-            		// Parken ----------------------------------------------------------
+					// Parken ----------------------------------------------------------
 					case 1:
 						$gardena -> sendCommand($mower, $gardena -> CMD_MOWER_PARK_UNTIL_FURTHER_NOTICE);
 						break;
