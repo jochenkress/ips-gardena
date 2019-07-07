@@ -6,7 +6,7 @@
 * angepasst 07.07.2019 complete Gardena API integration (watering, gateway, mower)
 */
 
-class gardena
+class gardenapi
 {
     var $user_id, $token, $locations;
     var $devices = [];
