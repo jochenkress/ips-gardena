@@ -1,11 +1,8 @@
 {
-	"id": "{126e249f-273c-4e95-9036-2c68bd23cb82}",
+	"id": "{8598e6e3-9ee3-42c1-bcfa-cdac7d475090}",
 	"author": "Jochen Kress",
-	"name": "IPSGardenaSmart",
+	"name": "IPS Gardena",
 	"url": "",
-	"compatibility": {
-		"version": "5.1"
-	},
 	"version": "1.0",
 	"build": 0,
 	"date": 0
