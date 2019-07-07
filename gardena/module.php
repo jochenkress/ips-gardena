@@ -91,8 +91,8 @@
 		public function RequestAction($Ident, $Value) {
 		  $username = $this->ReadPropertyString("Username");
 				$password = $this->ReadPropertyString("Password");
-			    $gardena = new gardena($username, $password );
-		  $mower = $gardena -> getFirstDeviceOfCategory($gardena::CATEGORY_MOWER);
+			    $gardena = new gardenapi($username, $password);
+		  $mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
 
 		switch($Value) {
 			case "1":
@@ -196,8 +196,8 @@
 				$password = $this->ReadPropertyString("Password");
 				//echo ($username);
 				//echo ($password);
-			    $gardena = new gardena($username, $password );
-				$mower = $gardena -> getFirstDeviceOfCategory($gardena::CATEGORY_MOWER);
+			    $gardena = new gardenapi($username, $password );
+				$mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
 				
 				/// HIER Device Infos
 				$this->getWert($gardena, $mower,"device_info", "manufacturer","Geraet_Hersteller_B", "String", true );
@@ -258,7 +258,7 @@
 				//echo ($username);
 				//echo ($password);
 			    $gardena = new gardena($username, $password );
-				$mower = $gardena -> getFirstDeviceOfCategory($gardena::CATEGORY_MOWER);
+				$mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
 				$this->getWert($gardena, $mower,"device_info", "manufacturer","Geraet_Hersteller_B", "String", false );
 				$this->getWert($gardena, $mower,"device_info", "product","Geraet_Produktname_B", "String", false );
 				$this->getWert($gardena, $mower,"device_info", "serial_number","Geraet_Serien_Nummer_B", "String" , false);
@@ -278,7 +278,7 @@
 				//echo ($username);
 				//echo ($password);
 			    $gardena = new gardena($username, $password );
-				$mower = $gardena -> getFirstDeviceOfCategory($gardena::CATEGORY_MOWER);
+				$mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
 				
 				$this->getWert($gardena, $mower,"battery", "level","Batterie_Level_B", "Integer", false );
 				$this->getWert($gardena, $mower,"battery", "rechargable_battery_status","Batterie_Status_B", "String", false );
@@ -293,7 +293,7 @@
 				//echo ($username);
 				//echo ($password);
 			    $gardena = new gardena($username, $password );
-				$mower = $gardena -> getFirstDeviceOfCategory($gardena::CATEGORY_MOWER);
+				$mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
 				$this->getWert($gardena, $mower,"radio", "quality","Funk_Staerke_B", "Integer", false );
 				$this->getWert($gardena, $mower,"radio", "state","Funk_Qualitaet_B", "String" , false);
 				$this->getWert($gardena, $mower,"radio", "connection_status","Funk_Status_B", "String" , false);
@@ -307,7 +307,7 @@
 				//echo ($username);
 				//echo ($password);
 			    $gardena = new gardena($username, $password );
-				$mower = $gardena -> getFirstDeviceOfCategory($gardena::CATEGORY_MOWER);
+				$mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
 				$this->getWert($gardena, $mower,"device_info", "last_time_online","Geraet_letzte_Onlinezeit_B", "Date" , false);
 				$this->getWert($gardena, $mower,"mower", "manual_operation","Status_manuelle_Operation_B", "String" , false);
 				$this->getWert($gardena, $mower,"mower", "timestamp_next_start","Status_Uhrzeit_naechster_Start_B", "Date" , false);
@@ -323,7 +323,7 @@
 	   $username = $this->ReadPropertyString("Username");
 				$password = $this->ReadPropertyString("Password");
 	$gardena = new gardena($username, $password);
-    $mower = $gardena -> getFirstDeviceOfCategory($gardena::CATEGORY_MOWER);
+    $mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
 
     
         {
