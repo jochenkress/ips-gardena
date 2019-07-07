@@ -1,8 +1,8 @@
 {
     "id": "{7a02fb49-35a2-4762-953c-44cedf58f2ad}",
-    "name": "gardena",
+    "name": "gardenapi",
     "type": 3,
-    "vendor": "gardena",
+    "vendor": "gardenapi",
     "aliases":
     [
         "Gardena",
