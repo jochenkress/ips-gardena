@@ -1,13 +1,13 @@
 {
     "id": "{7a02fb49-35a2-4762-953c-44cedf58f2ad}",
-    "name": "GardenaSileno",
+    "name": "gardena",
     "type": 3,
-    "vendor": "GardenaSileno",
+    "vendor": "gardena",
     "aliases":
     [
-        "GardenaSileno",
-        "GardenaSileno+",
-        "GardenaMower"
+        "Gardena",
+        "Gardena Smart",
+        "Gardena API"
     ],  
     "parentRequirements": [],
     "childRequirements": [],
