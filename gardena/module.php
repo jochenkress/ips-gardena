@@ -41,19 +41,15 @@
 			}
 			$proberty_name = "action";
 			$varID = @$this->GetIDForIdent($proberty_name);
-			if (IPS_VariableExists($varID)) {
-
-			}
-			else {
-				$VarID_NEU = $this->RegisterVariableInteger($proberty_name,"Aktion","GAR.Befehle",0);
+			if (!IPS_VariableExists($varID)) {
+				$varID = $this->RegisterVariableInteger($proberty_name,"Aktion","GAR.Befehle",0);
 				$this->EnableAction($proberty_name);
 			}
-			$doThis = 'GAR_gewaehlteAktualisieren($_IPS[\'TARGET\']);';
 			$interv = $this->ReadPropertyInteger("Interval")*60000;
-			$this->RegisterTimer("Update", $interv, $doThis);
+			$this->RegisterTimer("Update", $interv, 'GAR_StatusUpdate();');
 
 		}
-		
+
 		public function RequestAction($Ident, $Value) {
 			$username = $this->ReadPropertyString("Username");
 			$password = $this->ReadPropertyString("Password");
@@ -89,67 +85,54 @@
 			$this->SetStatus(102);
 
 			if ($this->ReadPropertyString("Password") !== "Password") {
-				$this->AlleInfosAktualisieren();
+				$this->StatusUpdate();
 				$this->SetTimerInterval("Update", $this->ReadPropertyInteger("Interval")*60000);
 			}
         }
- 
-        /**
-        * Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
-        * Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
-        *
-        * ABC_MeineErsteEigeneFunktion($id);
-        *
-        */
-        public function AlleInfosAktualisieren() {
-        	$this->GeraeteInfosAktualisieren();
-			$this->AktuellerGeraeteStatusAktualisieren();
-			$this->BatterieInfosAktualisieren();
-			$this->FunkInfosAktualisieren();
-        }
 		
 		public function getWert($gardena, $mower, $category_name, $proberty_name , $property, $typ, $check) {
-			if (!$check || $this->ReadPropertyBoolean($property) ) {
-
+			if ( $this->ReadPropertyBoolean($property) ) {
 				$status = $gardena -> getInfo($mower, $category_name, $proberty_name);
 
 				$varID = @$this->GetIDForIdent($proberty_name);
-				if (IPS_VariableExists($varID)) {
-					if ($typ == "Date") {
-						$datum = new DateTime($status);
-						$datum->setTimezone(new DateTimeZone(date_default_timezone_get()));
-						$datum_f = $datum->format('d/m/Y H:i:s');
-						$status = $datum_f;
-					}
-					SetValue($varID, $status);
-				}
-				else {
-					if ($typ == "String") {
-						$VarID_NEU = $this->RegisterVariableString($proberty_name,substr($property,0,-2));
-					}
-					if ($typ == "Integer") {
-						$VarID_NEU = $this->RegisterVariableInteger($proberty_name,substr($property,0,-2));
-					}
+				if (!IPS_VariableExists($varID)) {
+					if ($typ == "String" or $typ == "Date")
+						$varID = $this->RegisterVariableString($proberty_name,substr($property,0,-2));
+					if ($typ == "Integer") 
+						$varID = $this->RegisterVariableInteger($proberty_name,substr($property,0,-2));
 					if ($typ == "Boolean") {
-						if ($proberty_name == "charging"){
-							$VarID_NEU = $this->RegisterVariableBoolean($proberty_name,substr($property,0,-2), "GAR.Ladestatus");
-						} else {
-							$VarID_NEU = $this->RegisterVariableBoolean($proberty_name,substr($property,0,-2));
-						}
+						if ($proberty_name == "charging")
+							$varID = $this->RegisterVariableBoolean($proberty_name,substr($property,0,-2), "GAR.Ladestatus");
+						else
+							$varID = $this->RegisterVariableBoolean($proberty_name,substr($property,0,-2));
 					}
-					if ($typ == "Date") {
-						$VarID_NEU = $this->RegisterVariableString($proberty_name,substr($property,0,-2));
-						$datum = new DateTime($status);
-						$datum->setTimezone(new DateTimeZone(date_default_timezone_get()));
-						$datum_f = $datum->format('d/m/Y H:i:s');
-						$status = $datum_f;
-					}
-					SetValue($VarID_NEU, $status);
 				}
+				if ($typ == "Date") {
+					$datum = new DateTime($status);
+					$datum->setTimezone(new DateTimeZone(date_default_timezone_get()));
+					$datum_f = $datum->format('d/m/Y H:i:s');
+					$status = $datum_f;
+				}
+				SetValue($varID, $status);
 			}
 		}
-		
-		public function gewaehlteAktualisieren() {
+
+       		public function CheckUsernameUndPassword() {
+			$username = $this->ReadPropertyString("Username");
+			$password = $this->ReadPropertyString("Password");	
+				
+			$data = [ "sessions" => ["email" => "$username", "password" => "$password"] ];
+			$data_string = json_encode($data);
+			$ch = curl_init(self::LOGINURL);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Content-Length: ' . strlen($data_string)] );
+        		$result = curl_exec($ch);
+			echo ($result);	   
+		}
+
+		public function StatusUpdate() {
 			$username = $this->ReadPropertyString("Username");
 			$password = $this->ReadPropertyString("Password");
 			//echo ($username);
@@ -180,89 +163,12 @@
 
         }
 
-		public function CheckUsernameUndPassword() {
-            // Selbsterstellter Code
-			$username = $this->ReadPropertyString("Username");
-			$password = $this->ReadPropertyString("Password");	
 				
-			$data = [ "sessions" => ["email" => "$username", "password" => "$password"] ];
-			$data_string = json_encode($data);
-			$ch = curl_init(self::LOGINURL);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Content-Length: ' . strlen($data_string)] );
-        	$result = curl_exec($ch);
-			echo ($result);	   
-		}
-		
-		public function GeraeteInfosAktualisieren() {
-            // Selbsterstellter Code
-			$username = $this->ReadPropertyString("Username");
-			$password = $this->ReadPropertyString("Password");
-			//echo ($username);
-			//echo ($password);
-			$gardena = new gardena($username, $password );
-			$mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
-			$this->getWert($gardena, $mower,"device_info", "manufacturer","Geraet_Hersteller_B", "String", false );
-			$this->getWert($gardena, $mower,"device_info", "product","Geraet_Produktname_B", "String", false );
-			$this->getWert($gardena, $mower,"device_info", "serial_number","Geraet_Serien_Nummer_B", "String" , false);
-			$this->getWert($gardena, $mower,"device_info", "version","Geraet_Version_B", "String", false );
-			$this->getWert($gardena, $mower,"device_info", "sgtin","Geraet_sgtin_B", "String", false );
-			$this->getWert($gardena, $mower,"device_info", "last_time_online","Geraet_letzte_Onlinezeit_B", "Date" , false);
-			$this->getWert($gardena, $mower,"device_info", "category","Geraet_Kategorie_B", "String", false );
-			$this->getWert($gardena, $mower,"internal_temperature", "temperature","Geraet_Interne_Temperatur_B", "Integer", false );
-        }
-		
-		public function BatterieInfosAktualisieren() {
-            // Selbsterstellter Code
-			$username = $this->ReadPropertyString("Username");
-			$password = $this->ReadPropertyString("Password");
-			//echo ($username);
-			//echo ($password);
-			$gardena = new gardena($username, $password );
-			$mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
-
-			$this->getWert($gardena, $mower,"battery", "level","Batterie_Level_B", "Integer", false );
-			$this->getWert($gardena, $mower,"battery", "rechargable_battery_status","Batterie_Status_B", "String", false );
-			$this->getWert($gardena, $mower,"battery", "charging","Batterie_Ladestatus_B", "Boolean", false );
-        }
-		
-		public function FunkInfosAktualisieren() {
-            // Selbsterstellter Code
-			$username = $this->ReadPropertyString("Username");
-			$password = $this->ReadPropertyString("Password");
-			//echo ($username);
-			//echo ($password);
-			$gardena = new gardena($username, $password );
-			$mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
-			$this->getWert($gardena, $mower,"radio", "quality","Funk_Staerke_B", "Integer", false );
-			$this->getWert($gardena, $mower,"radio", "state","Funk_Qualitaet_B", "String" , false);
-			$this->getWert($gardena, $mower,"radio", "connection_status","Funk_Status_B", "String" , false);
-        }
-
-		public function AktuellerGeraeteStatusAktualisieren() {
-            // Selbsterstellter Code
-			$username = $this->ReadPropertyString("Username");
-			$password = $this->ReadPropertyString("Password");
-			//echo ($username);
-			//echo ($password);
-			$gardena = new gardena($username, $password );
-			$mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
-			$this->getWert($gardena, $mower,"device_info", "last_time_online","Geraet_letzte_Onlinezeit_B", "Date" , false);
-			$this->getWert($gardena, $mower,"mower", "manual_operation","Status_manuelle_Operation_B", "String" , false);
-			$this->getWert($gardena, $mower,"mower", "timestamp_next_start","Status_Uhrzeit_naechster_Start_B", "Date" , false);
-			$this->getWert($gardena, $mower,"mower", "override_end_time","Status_Ueberschriebene_Endzeit_B", "Date", false );
-			$this->getWert($gardena, $mower,"mower", "status","Status_aktuelle_Aktion_B", "String", false );
-			$this->getWert($gardena, $mower,"mower", "source_for_next_start","Status_Grund_B", "String" , false);
-			$this->getWert($gardena, $mower,"internal_temperature", "temperature","Geraet_Interne_Temperatur_B", "Integer", false );
-		}
-		
 		public function AktionAusfuehren($action) {
-	    	$username = $this->ReadPropertyString("Username");
+	    		$username = $this->ReadPropertyString("Username");
 			$password = $this->ReadPropertyString("Password");
 			$gardena = new gardena($username, $password);
-    		$mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
+    			$mower = $gardena -> getDevice($gardena::CATEGORY_MOWER);
 
         	{
             	$switch = $action;
