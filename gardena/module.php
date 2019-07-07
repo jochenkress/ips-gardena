@@ -91,30 +91,28 @@
         }
 		
 		public function getWert($gardena, $mower, $category_name, $proberty_name , $property, $typ, $check) {
-			if ( $this->ReadPropertyBoolean($property) ) {
-				$status = $gardena -> getInfo($mower, $category_name, $proberty_name);
+			$status = $gardena -> getInfo($mower, $category_name, $proberty_name);
 
-				$varID = @$this->GetIDForIdent($proberty_name);
-				if (!IPS_VariableExists($varID)) {
-					if ($typ == "String" or $typ == "Date")
-						$varID = $this->RegisterVariableString($proberty_name,substr($property,0,-2));
-					if ($typ == "Integer") 
-						$varID = $this->RegisterVariableInteger($proberty_name,substr($property,0,-2));
-					if ($typ == "Boolean") {
-						if ($proberty_name == "charging")
-							$varID = $this->RegisterVariableBoolean($proberty_name,substr($property,0,-2), "GAR.Ladestatus");
-						else
-							$varID = $this->RegisterVariableBoolean($proberty_name,substr($property,0,-2));
-					}
+			$varID = @$this->GetIDForIdent($proberty_name);
+			if (!IPS_VariableExists($varID)) {
+				if ($typ == "String" or $typ == "Date")
+					$varID = $this->RegisterVariableString($proberty_name,substr($property,0,-2));
+				if ($typ == "Integer") 
+					$varID = $this->RegisterVariableInteger($proberty_name,substr($property,0,-2));
+				if ($typ == "Boolean") {
+					if ($proberty_name == "charging")
+						$varID = $this->RegisterVariableBoolean($proberty_name,substr($property,0,-2), "GAR.Ladestatus");
+					else
+						$varID = $this->RegisterVariableBoolean($proberty_name,substr($property,0,-2));
 				}
-				if ($typ == "Date") {
-					$datum = new DateTime($status);
-					$datum->setTimezone(new DateTimeZone(date_default_timezone_get()));
-					$datum_f = $datum->format('d/m/Y H:i:s');
-					$status = $datum_f;
-				}
-				SetValue($varID, $status);
 			}
+			if ($typ == "Date") {
+				$datum = new DateTime($status);
+				$datum->setTimezone(new DateTimeZone(date_default_timezone_get()));
+				$datum_f = $datum->format('d/m/Y H:i:s');
+				$status = $datum_f;
+			}
+			SetValue($varID, $status);
 		}
 
        		public function CheckUsernameUndPassword() {
