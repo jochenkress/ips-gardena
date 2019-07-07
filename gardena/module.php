@@ -1,7 +1,7 @@
 <?
-     include("php_gardena_mover_class.ips.php");
+     include("gardena-api-class.ips.php");
     // Klassendefinition
-    class GardenaSileno extends IPSModule {
+    class gardena extends IPSModule {
 
  
         // Der Konstruktor des Moduls
